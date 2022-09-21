@@ -4,12 +4,13 @@ import com.google.gson.Gson;
 import dao.EventDao;
 import model.EventModel;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.List;
 
@@ -65,14 +66,15 @@ public class BasicController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
+        try {
        String nome = req.getParameter("nome");
        String data = req.getParameter("dataInput");
        String local = req.getParameter("local");
 
        EventModel eventModel = new EventModel(nome, data, local);
 
-        try {
-            eventDao.createEvent(eventModel);
+       eventDao.createEvent(eventModel);
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -82,15 +84,31 @@ public class BasicController extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        int idEvent = Integer.parseInt(req.getParameter("id"));
-        String nome1 = req.getParameter("nome");
-        String local1 = req.getParameter("local");
-        String data1 = req.getParameter("dataInput");
-
-        EventModel eventModel1 = new EventModel(idEvent, nome1, data1, local1);
-
         try {
-            eventDao.updateEvent(eventModel1);
+        BufferedReader br = new BufferedReader(new InputStreamReader(req.getInputStream()));
+
+        String parameters = br.readLine();
+
+        String[] vetor = parameters.split("&");
+
+        String[] jsonId = vetor[0].split("=");
+        String[] jsonNome = vetor[1].split("=");
+        String[] jsonData = vetor[2].split("=");
+        String[] jsonLocal = vetor[3].split("=");
+
+        int id = Integer.parseInt(jsonId[1]);
+        String nome = jsonNome[1];
+        String data = jsonData[1];
+        String local = jsonLocal[1];
+
+//        String nome1 = req.getParameter("nome");
+//        String local1 = req.getParameter("local");
+//        String data1 = req.getParameter("dataInput");
+
+        EventModel eventModel = new EventModel(id, nome, data, local);
+
+        eventDao.updateEvent(eventModel);
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -99,12 +117,16 @@ public class BasicController extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        System.out.println(req.getHeader("jsonId"));
-
-        int id = Integer.parseInt(req.getParameter("jsonId"));
-        System.out.println(id);
-
         try {
+        BufferedReader br = new BufferedReader(new InputStreamReader(req.getInputStream()));
+
+        String parameters = br.readLine();
+
+        String[] vetor = parameters.split("&");
+        String[] jsonId = vetor[0].split("=");
+
+        int id = Integer.parseInt(jsonId[1]);
+
             eventDao.deleteEvent(id);
         } catch (Exception e) {
             throw new RuntimeException(e);

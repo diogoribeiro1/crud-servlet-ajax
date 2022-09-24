@@ -27,9 +27,13 @@ public class EventDao {
     }
 
     public List<EventModel> getAllEvent() throws Exception {
+
         String comandoSQL = "SELECT * FROM eventos_tbl";
+
         conn = new ConexaoDao().getConnection();
+
         List<EventModel> listEvents = new ArrayList<>();
+
         try {
             pstm = conn.prepareStatement(comandoSQL);
             pstm.execute();

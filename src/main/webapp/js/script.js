@@ -1,30 +1,30 @@
-$.ajax({
-    url: "/crud-jsp/controller",
-    type: 'GET',
-    success: function (result) {
-
-        lista = JSON.parse(result);
-        console.log(lista)
-        listarEventos(lista);
-    },
-    error: function (error) {
-        alert(error);
-    }
-})
-
-function listarEventos(lista){
-   tbody = document.getElementById("tbody");
-    lista.map((evento) =>{
-        $("#tbody").append("<tr> <div class='row'> <td>"+ evento.id +"</td> <td>"+ evento.nome +"</td> <td>"+ evento.data + " </td> <td>" + evento.local + " </td> <td><button type=\"button\" class=\"btn btn-danger\" onclick=\"deletarEvento("+evento.id+")\">Delete</button></td> <td><button type=\"button\" class=\"btn btn-primary\" onclick=\"getEventoById("+evento.id+")\" data-bs-toggle=\"modal\" data-bs-target=\"#editarModal\">Edit</button></td>   </div></tr>");
+$(document).ready(function () {
+    $.ajax({
+        url: "/crud-jsp/controller",
+        type: 'GET',
+        success: function (result) {
+            var lista = JSON.parse(result);
+            listarEventos(lista);
+        },
+        error: function (error) {
+            alert(error);
+        }
     })
-    // for (let i = 0; i < lista.length; i++) {
-    //     $("#tbody").append("<tr> <td>"+ lista[i].id +"</td> </tr>");
-    // }
+});
 
+function listarEventos(lista) {
+
+    var tbody = document.getElementById("tbody");
+
+    lista.map((evento) => {
+        $("#tbody").append("<tr> <div class='row'> <td>" + evento.id + "</td> <td>" + evento.nome + "</td> <td>" + evento.data + " </td> <td>" + evento.local + " </td> <td><button type=\"button\" class=\"btn btn-danger\" onclick=\"deletarEvento(" + evento.id + ")\">Delete</button></td> <td><button type=\"button\" class=\"btn btn-primary\" onclick=\"editarEvento(" + evento.id + ")\" data-bs-toggle=\"modal\" data-bs-target=\"#editarModal\">Edit</button></td> </div></tr>");
+    })
 }
 
-$(function (){
-    $("#btnSalvar").on("click", function (){
+$(function () {
+    $('form[name = "formSave"]').submit(function (event) {
+
+        event.preventDefault();
 
         var nome = document.getElementById("inputNome").value;
         var dataInput = document.getElementById("inputData").value;
@@ -46,22 +46,22 @@ $(function (){
     })
 })
 
-// var xhttp = new XMLHttpRequest();
-//     xhttp.open("GET", "/crud-jsp/controller");
-// xhttp.send();
+function editarEvento(id) {
 
-$(function (){
-    $("#btnEditar").on("click", function (){
+    getEventoById(id);
 
-        var id = document.getElementById("inputIdEditar").value;
-        var nome = document.getElementById("inputNomeEditar").value;
-        var dataInput = document.getElementById("inputDataEditar").value;
-        var local = document.getElementById("inputLocalEditar").value;
-        var action = 'PUT';
+    $('form[name = "formEdit"]').submit(function (event) {
+
+        event.preventDefault();
+
+        var nome = document.getElementById('inputNomeEditar').value;
+        var dataInput = document.getElementById('inputDataEditar').value;
+        var local = document.getElementById('inputLocalEditar').value;
+        var action = 'PUT'
 
         $.ajax({
             url: "/crud-jsp/controller",
-            type: 'PUT',
+            type: 'POST',
             data: {id, nome, dataInput, local, action},
             success: function () {
                 alert('Editado com Sucesso!')
@@ -72,10 +72,10 @@ $(function (){
             }
         })
     })
-})
+}
 
-function deletarEvento(id)
-{
+function deletarEvento(id) {
+
     result = confirm("Deseja realmente apagar?");
     if (result) {
         var jsonId = JSON.parse(id);
@@ -83,9 +83,9 @@ function deletarEvento(id)
 
         $.ajax({
             url: "/crud-jsp/controller",
-            type: 'DELETE',
+            type: 'POST',
             data: {jsonId, action},
-            success: function () {	
+            success: function () {
                 alert('Deletado com Sucesso!')
                 document.location.reload(true);
             },
@@ -94,17 +94,17 @@ function deletarEvento(id)
             }
         })
     }
+
 }
 
-function getEventoById(id)
-{
+function getEventoById(id) {
+
     var action = 'GetById'
     $.ajax({
         url: "/crud-jsp/controller",
         type: 'GET',
         data: {id, action},
         success: function (result) {
-            console.log(result)
             evento = JSON.parse(result);
             setarInputs([evento]);
         },
@@ -112,15 +112,16 @@ function getEventoById(id)
             alert('error');
         }
     })
+
 }
 
-function setarInputs(evento)
-{
-    evento.map(function (value){
-        document.getElementById('inputIdEditar').value = value.id;
+function setarInputs(evento) {
+
+    evento.map(function (value) {
         document.getElementById('inputNomeEditar').value = value.nome;
         document.getElementById('inputDataEditar').value = value.data;
         document.getElementById('inputLocalEditar').value = value.local;
     });
     $('#editarModal').modal('show');
+
 }

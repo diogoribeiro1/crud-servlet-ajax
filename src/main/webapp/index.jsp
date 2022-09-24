@@ -6,7 +6,8 @@
     <meta http-equiv="Content-Type" content="text/html" charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Eventos</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
 </head>
 <body>
 <div class="container mt-5">
@@ -37,27 +38,23 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form METHOD="POST" class="row g-3">
-                    <div class="col-md-6">
-                        <label for="inputIdEditar" class="form-label">Id</label>
-                        <input type="text" class="form-control" id="inputIdEditar" name="inputIdEditar" readonly>
-                    </div>
+                <form name="formEdit" METHOD="POST" class="row g-3">
                     <div class="col-md-6">
                         <label for="inputNomeEditar" class="form-label">Evento</label>
-                        <input type="text" class="form-control" id="inputNomeEditar" name="inputNomeEditar">
+                        <input type="text" class="form-control" id="inputNomeEditar" name="inputNomeEditar" required>
                     </div>
                     <div class="col-md-6">
                         <label for="inputDataEditar" class="form-label">Data</label>
-                        <input type="date" class="form-control" id="inputDataEditar" name="inputDataEditar">
+                        <input type="date" class="form-control" id="inputDataEditar" name="inputDataEditar" required>
                     </div>
                     <div class="col-12">
                         <label for="inputLocalEditar" class="form-label">Local</label>
-                        <input type="text" class="form-control" id="inputLocalEditar" name="inputLocalEditar">
+                        <input type="text" class="form-control" id="inputLocalEditar" name="inputLocalEditar" required>
                     </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                <button type="button" class="btn btn-primary" id="btnEditar">Editar</button>
+                <button type="submit" class="btn btn-primary" id="btnEditar">Editar</button>
             </div>
             </form>
         </div>
@@ -72,23 +69,23 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form METHOD="POST" class="row g-3">
+                <form action="formSave" METHOD="POST" class="row g-3">
                     <div class="col-md-6">
                         <label for="inputNome" class="form-label">Evento</label>
-                        <input type="text" class="form-control" id="inputNome" name="inputNome">
+                        <input type="text" class="form-control" id="inputNome" name="inputNome" required>
                     </div>
                     <div class="col-md-6">
                         <label for="inputData" class="form-label">Data</label>
-                        <input type="date" class="form-control" id="inputData" name="inputData">
+                        <input type="date" class="form-control" id="inputData" name="inputData" required>
                     </div>
                     <div class="col-12">
                         <label for="inputLocal" class="form-label">Local</label>
-                        <input type="text" class="form-control" id="inputLocal" name="inputLocal">
+                        <input type="text" class="form-control" id="inputLocal" name="inputLocal" required>
                     </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                <button id="btnSalvar" type="button" class="btn btn-primary">Salvar</button>
+                <button id="btnSalvar" type="submit" class="btn btn-primary">Salvar</button>
             </div>
             </form>
         </div>
@@ -97,7 +94,9 @@
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.10/jquery.mask.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
-<script src= "js/script.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
+        crossorigin="anonymous"></script>
+<script src="js/script.js"></script>
 </body>
 </html>

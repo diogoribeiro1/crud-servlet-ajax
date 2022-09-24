@@ -6,11 +6,11 @@
   <display-name>Archetype Created Web Application</display-name>
   
   <servlet>
-        <servlet-name>BasicController</servlet-name>
-        <servlet-class>controller.BasicController</servlet-class>
+        <servlet-name>EventController</servlet-name>
+        <servlet-class>controller.EventController</servlet-class>
       </servlet>
       <servlet-mapping>
-        <servlet-name>BasicController</servlet-name>
+        <servlet-name>EventController</servlet-name>
         <url-pattern>/controller</url-pattern>
       </servlet-mapping>
 

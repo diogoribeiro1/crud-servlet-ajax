@@ -1,16 +1,24 @@
+
 $(document).ready(function () {
+    getAll();
+});
+
+function getAll() {
     $.ajax({
         url: "/crud-jsp/controller",
         type: 'GET',
         success: function (result) {
-            var lista = JSON.parse(result);
-            listarEventos(lista);
+
+            var listaPadrao = JSON.parse(result);
+
+            listarEventos(listaPadrao);
         },
         error: function (error) {
             alert(error);
         }
     })
-});
+}
+
 
 function listarEventos(lista) {
 
@@ -22,9 +30,9 @@ function listarEventos(lista) {
 }
 
 $(function () {
-    $('form[name = "formSave"]').submit(function (event) {
+    $("#btnSalvar").click(function () {
 
-        event.preventDefault();
+        //event.preventDefault();
 
         var nome = document.getElementById("inputNome").value;
         var dataInput = document.getElementById("inputData").value;
@@ -34,10 +42,22 @@ $(function () {
         $.ajax({
             url: "/crud-jsp/controller",
             type: 'POST',
-            data: {nome, dataInput, local, action},
+            data: { nome, dataInput, local, action },
             success: function () {
-                alert('Salvo com Sucesso!')
-                document.location.reload(true);
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Salvo',
+                    text: 'Salvo com sucesso!',
+                    timer: 1500
+                })
+
+                document.getElementById("inputNome").value = '';
+                document.getElementById("inputData").value = '';
+                document.getElementById("inputLocal").value = '';
+
+                getAll();
+
             },
             error: function (error) {
                 alert(error);
@@ -62,7 +82,7 @@ function editarEvento(id) {
         $.ajax({
             url: "/crud-jsp/controller",
             type: 'POST',
-            data: {id, nome, dataInput, local, action},
+            data: { id, nome, dataInput, local, action },
             success: function () {
                 alert('Editado com Sucesso!')
                 document.location.reload(true);
@@ -76,24 +96,35 @@ function editarEvento(id) {
 
 function deletarEvento(id) {
 
-    result = confirm("Deseja realmente apagar?");
-    if (result) {
-        var jsonId = JSON.parse(id);
-        var action = 'DELETE';
+    Swal.fire({
+        title: 'Deseja realmente deletar?',
+        showDenyButton: true,
+        showCancelButton: true,
+        confirmButtonText: 'Deletar',
+        denyButtonText: `Nao deletar`,
+    }).then((result) => {
+        if (result.isConfirmed) {
+            var jsonId = JSON.parse(id);
+            var action = 'DELETE';
 
-        $.ajax({
-            url: "/crud-jsp/controller",
-            type: 'POST',
-            data: {jsonId, action},
-            success: function () {
-                alert('Deletado com Sucesso!')
-                document.location.reload(true);
-            },
-            error: function () {
-                alert('error');
-            }
-        })
-    }
+            $.ajax({
+                url: "/crud-jsp/controller",
+                type: 'POST',
+                data: { jsonId, action },
+                success: function () {
+
+                    Swal.fire('Deletado!', '', 'sucesso')
+
+                },
+                error: function () {
+                    alert('error');
+                }
+            })
+        } else if (result.isDenied) {
+            Swal.fire('Nao deletado', '', 'info')
+        }
+    })
+
 
 }
 
@@ -103,7 +134,7 @@ function getEventoById(id) {
     $.ajax({
         url: "/crud-jsp/controller",
         type: 'GET',
-        data: {id, action},
+        data: { id, action },
         success: function (result) {
             evento = JSON.parse(result);
             setarInputs([evento]);

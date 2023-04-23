@@ -7,6 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="crud-jsp" />
+        <module name="crud-servlet-ajax" />
       </profile>
     </annotationProcessing>
   </component>

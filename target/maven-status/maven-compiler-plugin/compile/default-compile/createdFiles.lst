@@ -1,4 +1,4 @@
-model/EventModel.class
 dao/EventDao.class
-controller/EventController.class
+model/EventModel.class
 dao/ConexaoDao.class
+controller/EventController.class

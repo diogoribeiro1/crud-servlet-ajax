@@ -5,10 +5,10 @@
          version="3.1">
   <display-name>Archetype Created Web Application</display-name>
   
-  <servlet>
+    <servlet>
         <servlet-name>EventController</servlet-name>
         <servlet-class>controller.EventController</servlet-class>
-      </servlet>
+    </servlet>
       <servlet-mapping>
         <servlet-name>EventController</servlet-name>
         <url-pattern>/controller</url-pattern>

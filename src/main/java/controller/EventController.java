@@ -63,8 +63,6 @@ public class EventController extends HttpServlet {
                 saveEvent(req, resp);
                 break;
         }
-
-
     }
 
     protected void saveEvent(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

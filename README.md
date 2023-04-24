@@ -4,6 +4,8 @@
 
 - Java 11
 - SERVLET
+- MYSQL
+- LOMBOK
 - HTML
 - CSS
 - JS

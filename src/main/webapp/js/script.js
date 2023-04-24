@@ -22,17 +22,16 @@ function getAll() {
 
 function listarEventos(lista) {
 
-    var tbody = document.getElementById("tbody");
+    var tbody = $("#tbody");
+    tbody.empty();
 
     lista.map((evento) => {
-        $("#tbody").append("<tr> <div class='row'> <td>" + evento.id + "</td> <td>" + evento.nome + "</td> <td>" + evento.data + " </td> <td>" + evento.local + " </td> <td><button type=\"button\" class=\"btn btn-danger\" onclick=\"deletarEvento(" + evento.id + ")\">Delete</button></td> <td><button type=\"button\" class=\"btn btn-primary\" onclick=\"editarEvento(" + evento.id + ")\" data-bs-toggle=\"modal\" data-bs-target=\"#editarModal\">Edit</button></td> </div></tr>");
+        tbody.append("<tr> <div class='row'> <td>" + evento.id + "</td> <td>" + evento.nome + "</td> <td>" + evento.data + " </td> <td>" + evento.local + " </td> <td><button type=\"button\" class=\"btn btn-danger\" onclick=\"deletarEvento(" + evento.id + ")\">Delete</button></td> <td><button type=\"button\" class=\"btn btn-primary\" onclick=\"editarEvento(" + evento.id + ")\" data-bs-toggle=\"modal\" data-bs-target=\"#editarModal\">Edit</button></td> </div></tr>");
     })
 }
 
 $(function () {
     $("#btnSalvar").click(function () {
-
-        //event.preventDefault();
 
         var nome = document.getElementById("inputNome").value;
         var dataInput = document.getElementById("inputData").value;
@@ -115,6 +114,7 @@ function deletarEvento(id) {
 
                     Swal.fire('Deletado!', '', 'sucesso')
 
+                    getAll();
                 },
                 error: function () {
                     alert('error');

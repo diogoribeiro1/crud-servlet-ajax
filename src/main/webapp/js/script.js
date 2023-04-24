@@ -42,7 +42,9 @@ $(function () {
             url: "/crud-jsp/controller",
             type: 'POST',
             data: { nome, dataInput, local, action },
-            success: function () {
+            success: function (data, textStatus, xhr) {
+
+                console.log(xhr.status);
 
                 Swal.fire({
                     icon: 'success',

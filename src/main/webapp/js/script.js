@@ -85,8 +85,19 @@ function editarEvento(id) {
             type: 'POST',
             data: { id, nome, dataInput, local, action },
             success: function () {
-                alert('Editado com Sucesso!')
-                document.location.reload(true);
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Editado',
+                    text: 'Editado com sucesso!',
+                    timer: 1500
+                })
+
+                document.getElementById("inputNomeEditar").value = '';
+                document.getElementById("inputDataEditar").value = '';
+                document.getElementById("inputLocalEditar").value = '';
+
+                getAll();
             },
             error: function () {
                 alert('error');
@@ -98,13 +109,17 @@ function editarEvento(id) {
 function deletarEvento(id) {
 
     Swal.fire({
+
         title: 'Deseja realmente deletar?',
         showDenyButton: true,
         showCancelButton: true,
         confirmButtonText: 'Deletar',
         denyButtonText: `Nao deletar`,
+
     }).then((result) => {
+
         if (result.isConfirmed) {
+
             var jsonId = JSON.parse(id);
             var action = 'DELETE';
 
@@ -122,12 +137,11 @@ function deletarEvento(id) {
                     alert('error');
                 }
             })
+
         } else if (result.isDenied) {
             Swal.fire('Nao deletado', '', 'info')
         }
     })
-
-
 }
 
 function getEventoById(id) {

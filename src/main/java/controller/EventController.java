@@ -8,11 +8,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
 public class EventController extends HttpServlet {
+
     private EventDao eventDao = new EventDao();
 
     @Override
@@ -77,6 +79,8 @@ public class EventController extends HttpServlet {
 
             eventDao.createEvent(eventModel);
 
+            resp.setStatus(HttpServletResponse.SC_CREATED);
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -95,6 +99,8 @@ public class EventController extends HttpServlet {
 
             eventDao.updateEvent(eventModel);
 
+            resp.setStatus(HttpServletResponse.SC_ACCEPTED);
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -106,6 +112,8 @@ public class EventController extends HttpServlet {
 
             int id = Integer.parseInt(req.getParameter("jsonId"));
             eventDao.deleteEvent(id);
+
+            resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
 
         } catch (Exception e) {
             throw new RuntimeException(e);

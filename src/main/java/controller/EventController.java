@@ -1,7 +1,9 @@
 package controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import dao.EventDao;
+import dto.EventDTO;
 import model.EventModel;
 
 import javax.servlet.ServletException;
@@ -27,6 +29,7 @@ public class EventController extends HttpServlet {
                 List<EventModel> listEvents = eventDao.getAllEvent();
 
                 PrintWriter out = resp.getWriter();
+                resp.setStatus(HttpServletResponse.SC_OK);
                 out.print(new Gson().toJson(listEvents));
                 out.flush();
 
@@ -51,29 +54,14 @@ public class EventController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        String action = req.getParameter("action");
-
-        switch (action) {
-            case "PUT":
-                editEvent(req, resp);
-                break;
-
-            case "DELETE":
-                deleteEvent(req, resp);
-                break;
-            case "POST":
-                saveEvent(req, resp);
-                break;
-        }
-    }
-
-    protected void saveEvent(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        EventDTO eventRequest = mapper.readValue(req.getInputStream(), EventDTO.class);
 
         try {
 
-            String nome = req.getParameter("nome");
-            String data = req.getParameter("dataInput");
-            String local = req.getParameter("local");
+            String nome = eventRequest.getNome();
+            String data = eventRequest.getDataInput();
+            String local = eventRequest.getLocal();
 
             EventModel eventModel = new EventModel(nome, data, local);
 
@@ -86,14 +74,38 @@ public class EventController extends HttpServlet {
         }
     }
 
-    protected void editEvent(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        try {
+            String contextPath = req.getContextPath();
+            String urlPath = req.getRequestURI().substring(contextPath.length());
+            String idString = urlPath.split("/")[2];
+
+            eventDao.deleteEvent(Integer.parseInt(idString));
+
+            resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         try {
+            String contextPath = req.getContextPath();
+            String urlPath = req.getRequestURI().substring(contextPath.length());
+            String idString = urlPath.split("/")[2];
 
-            int id = Integer.parseInt(req.getParameter("id"));
-            String nome = req.getParameter("nome");
-            String local = req.getParameter("local");
-            String data = req.getParameter("dataInput");
+            ObjectMapper mapper = new ObjectMapper();
+            EventDTO eventRequest = mapper.readValue(req.getInputStream(), EventDTO.class);
+
+            String nome = eventRequest.getNome();
+            String data = eventRequest.getDataInput();
+            String local = eventRequest.getLocal();
+
+            Integer id = Integer.parseInt(idString);
 
             EventModel eventModel = new EventModel(id, nome, data, local);
 
@@ -104,19 +116,6 @@ public class EventController extends HttpServlet {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-    }
 
-    protected void deleteEvent(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-        try {
-
-            int id = Integer.parseInt(req.getParameter("jsonId"));
-            eventDao.deleteEvent(id);
-
-            resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
-
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 }

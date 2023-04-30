@@ -11,7 +11,7 @@
     </servlet>
       <servlet-mapping>
         <servlet-name>EventController</servlet-name>
-        <url-pattern>/controller</url-pattern>
+        <url-pattern>/controller/*</url-pattern>
       </servlet-mapping>
 
 </web-app>

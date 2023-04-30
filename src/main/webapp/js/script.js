@@ -41,10 +41,9 @@ $(function () {
         $.ajax({
             url: "/crud-jsp/controller",
             type: 'POST',
-            data: { nome, dataInput, local, action },
+            data: JSON.stringify({ nome, dataInput, local, action }),
+            contentType: 'application/json',
             success: function (data, textStatus, xhr) {
-
-                console.log(xhr.status);
 
                 Swal.fire({
                     icon: 'success',
@@ -81,10 +80,10 @@ function editarEvento(id) {
         var action = 'PUT'
 
         $.ajax({
-            url: "/crud-jsp/controller",
-            type: 'POST',
-            data: { id, nome, dataInput, local, action },
-            success: function () {
+            url: "/crud-jsp/controller/"+id+"",
+            type: 'PUT',
+            data: JSON.stringify({nome, dataInput, local, action }),
+            success: function (data, textStatus, xhr) {
 
                 Swal.fire({
                     icon: 'success',
@@ -123,10 +122,15 @@ function deletarEvento(id) {
             var jsonId = JSON.parse(id);
             var action = 'DELETE';
 
+            var data = {
+                jsonId: jsonId,
+                action: action
+            };
+
             $.ajax({
-                url: "/crud-jsp/controller",
-                type: 'POST',
-                data: { jsonId, action },
+                url: "/crud-jsp/controller/"+id+"",
+                type: 'DELETE',
+                data: JSON.stringify(data),
                 success: function () {
 
                     Swal.fire('Deletado!', '', 'sucesso')
@@ -159,7 +163,6 @@ function getEventoById(id) {
             alert('error');
         }
     })
-
 }
 
 function setarInputs(evento) {
@@ -170,5 +173,4 @@ function setarInputs(evento) {
         document.getElementById('inputLocalEditar').value = value.local;
     });
     $('#editarModal').modal('show');
-
 }

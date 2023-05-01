@@ -1,11 +1,10 @@
-
 $(document).ready(function () {
     getAll();
 });
 
 function getAll() {
     $.ajax({
-        url: "/crud-jsp/controller",
+        url: "/crud-jsp/event",
         type: 'GET',
         success: function (result) {
 
@@ -18,7 +17,6 @@ function getAll() {
         }
     })
 }
-
 
 function listarEventos(lista) {
 
@@ -36,15 +34,13 @@ $(function () {
         var nome = document.getElementById("inputNome").value;
         var dataInput = document.getElementById("inputData").value;
         var local = document.getElementById("inputLocal").value;
-        var action = 'POST';
 
         $.ajax({
-            url: "/crud-jsp/controller",
+            url: "/crud-jsp/event",
             type: 'POST',
-            data: { nome, dataInput, local, action },
+            data: JSON.stringify({ nome, dataInput, local }),
+            contentType: 'application/json',
             success: function (data, textStatus, xhr) {
-
-                console.log(xhr.status);
 
                 Swal.fire({
                     icon: 'success',
@@ -78,15 +74,25 @@ function editarEvento(id) {
         var nome = document.getElementById('inputNomeEditar').value;
         var dataInput = document.getElementById('inputDataEditar').value;
         var local = document.getElementById('inputLocalEditar').value;
-        var action = 'PUT'
 
         $.ajax({
-            url: "/crud-jsp/controller",
-            type: 'POST',
-            data: { id, nome, dataInput, local, action },
-            success: function () {
-                alert('Editado com Sucesso!')
-                document.location.reload(true);
+            url: "/crud-jsp/event/"+id+"",
+            type: 'PUT',
+            data: JSON.stringify({nome, dataInput, local }),
+            success: function (data, textStatus, xhr) {
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Editado',
+                    text: 'Editado com sucesso!',
+                    timer: 1500
+                })
+
+                document.getElementById("inputNomeEditar").value = '';
+                document.getElementById("inputDataEditar").value = '';
+                document.getElementById("inputLocalEditar").value = '';
+
+                getAll();
             },
             error: function () {
                 alert('error');
@@ -98,20 +104,20 @@ function editarEvento(id) {
 function deletarEvento(id) {
 
     Swal.fire({
+
         title: 'Deseja realmente deletar?',
         showDenyButton: true,
         showCancelButton: true,
         confirmButtonText: 'Deletar',
         denyButtonText: `Nao deletar`,
+
     }).then((result) => {
+
         if (result.isConfirmed) {
-            var jsonId = JSON.parse(id);
-            var action = 'DELETE';
 
             $.ajax({
-                url: "/crud-jsp/controller",
-                type: 'POST',
-                data: { jsonId, action },
+                url: "/crud-jsp/event/"+id+"",
+                type: 'DELETE',
                 success: function () {
 
                     Swal.fire('Deletado!', '', 'sucesso')
@@ -122,21 +128,18 @@ function deletarEvento(id) {
                     alert('error');
                 }
             })
+
         } else if (result.isDenied) {
             Swal.fire('Nao deletado', '', 'info')
         }
     })
-
-
 }
 
 function getEventoById(id) {
 
-    var action = 'GetById'
     $.ajax({
-        url: "/crud-jsp/controller",
+        url: "/crud-jsp/event/"+id+"",
         type: 'GET',
-        data: { id, action },
         success: function (result) {
             evento = JSON.parse(result);
             setarInputs([evento]);
@@ -145,7 +148,6 @@ function getEventoById(id) {
             alert('error');
         }
     })
-
 }
 
 function setarInputs(evento) {
@@ -156,5 +158,4 @@ function setarInputs(evento) {
         document.getElementById('inputLocalEditar').value = value.local;
     });
     $('#editarModal').modal('show');
-
 }

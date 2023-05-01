@@ -4,7 +4,7 @@ $(document).ready(function () {
 
 function getAll() {
     $.ajax({
-        url: "/crud-jsp/controller",
+        url: "/crud-jsp/event",
         type: 'GET',
         success: function (result) {
 
@@ -17,7 +17,6 @@ function getAll() {
         }
     })
 }
-
 
 function listarEventos(lista) {
 
@@ -37,7 +36,7 @@ $(function () {
         var local = document.getElementById("inputLocal").value;
 
         $.ajax({
-            url: "/crud-jsp/controller",
+            url: "/crud-jsp/event",
             type: 'POST',
             data: JSON.stringify({ nome, dataInput, local }),
             contentType: 'application/json',
@@ -77,7 +76,7 @@ function editarEvento(id) {
         var local = document.getElementById('inputLocalEditar').value;
 
         $.ajax({
-            url: "/crud-jsp/controller/"+id+"",
+            url: "/crud-jsp/event/"+id+"",
             type: 'PUT',
             data: JSON.stringify({nome, dataInput, local }),
             success: function (data, textStatus, xhr) {
@@ -117,7 +116,7 @@ function deletarEvento(id) {
         if (result.isConfirmed) {
 
             $.ajax({
-                url: "/crud-jsp/controller/"+id+"",
+                url: "/crud-jsp/event/"+id+"",
                 type: 'DELETE',
                 success: function () {
 
@@ -139,7 +138,7 @@ function deletarEvento(id) {
 function getEventoById(id) {
 
     $.ajax({
-        url: "/crud-jsp/controller/"+id+"",
+        url: "/crud-jsp/event/"+id+"",
         type: 'GET',
         success: function (result) {
             evento = JSON.parse(result);

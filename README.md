@@ -1,3 +1,16 @@
+<style>
+  details {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin: 0.5em 0;
+    padding: 0.5em;
+  }
+
+  details[open] {
+    background-color: #f0f0f0;
+  }
+</style>
+
 # CRUD Servlet Ajax
 
 Este é um projeto de CRUD simples utilizando Java no lado do servidor e a arquitetura REST, sem a utilização de frameworks. Já no lado do cliente, é utilizado Ajax com jQuery para realizar requisições assíncronas à API e atualizar o conteúdo da página sem precisar recarregá-la completamente.
@@ -30,16 +43,6 @@ Execute no terminal
     mvn tomcat6:run -f "pom.xml" 
 ```
 
-## Endpoints
-
-|   Endpoints   |  Query Parameters  |    Verb    |
-| :---         |     :---:      |          ---: |
-| /crud-jsp/event        |   *  | GET    |
-| /crud-jsp/event/{id}   |   *  | GET    |
-| /crud-jsp/event        |   *  | POST   |
-| /crud-jsp/event/{id}   |   *  | PUT    |
-| /crud-jsp/event/{id}   |   *  | DELETE |
-
 ## Payload
 
 ```json
@@ -51,18 +54,16 @@ Execute no terminal
     } 
 ```
 
-<style>
-  details {
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    margin: 0.5em 0;
-    padding: 0.5em;
-  }
+## Endpoints
 
-  details[open] {
-    background-color: #f0f0f0;
-  }
-</style>
+|   Endpoints   |  Query Parameters  |    Verb    |
+| :---         |     :---:      |          ---: |
+| /crud-jsp/event        |   *  | GET    |
+| /crud-jsp/event/{id}   |   *  | GET    |
+| /crud-jsp/event        |   *  | POST   |
+| /crud-jsp/event/{id}   |   *  | PUT    |
+| /crud-jsp/event/{id}   |   *  | DELETE |
+
 
 <details>
   <summary>GET ALL - /crud-jsp/event </summary>
@@ -70,10 +71,6 @@ Execute no terminal
 ## Descrição
 
 Retorna todos os eventos.
-
-## Parâmetros de Entrada
-
-- `id` (obrigatório): ID do usuário.
 
 ## Códigos de Resposta
 
@@ -178,6 +175,10 @@ HTTP/1.1 201 CREATED
 
 Edita um evento.
 
+## Parâmetros de Entrada
+
+- `id` (obrigatório): ID do evento.
+
 ## Códigos de Resposta
 
 - `200`: Evento editado com sucesso.
@@ -206,6 +207,10 @@ HTTP/1.1 200 OK
 ## Descrição
 
 Deleta um evento.
+
+## Parâmetros de Entrada
+
+- `id` (obrigatório): ID do evento.
 
 ## Códigos de Resposta
 

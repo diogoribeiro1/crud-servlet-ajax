@@ -15,9 +15,10 @@ Execute no terminal
 |   Endpoints   |  Query Parameters  |    Verb    |
 | :---         |     :---:      |          ---: |
 | /crud-jsp/controller   |      | GET    |
+| /crud-jsp/controller/{id}   |      | GET    |
 | /crud-jsp/controller     | Action, nome       | POST    |
-| /crud-jsp/controller   |      | PUT    |
-| /crud-jsp/controller     | Action, nome       | DELETE    |
+| /crud-jsp/controller/{id}   |      | PUT    |
+| /crud-jsp/controller/{id}   |      | DELETE |
 
 `/crud-jsp/controller`
 

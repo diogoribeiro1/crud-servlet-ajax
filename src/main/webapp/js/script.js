@@ -1,4 +1,3 @@
-
 $(document).ready(function () {
     getAll();
 });
@@ -36,12 +35,11 @@ $(function () {
         var nome = document.getElementById("inputNome").value;
         var dataInput = document.getElementById("inputData").value;
         var local = document.getElementById("inputLocal").value;
-        var action = 'POST';
 
         $.ajax({
             url: "/crud-jsp/controller",
             type: 'POST',
-            data: JSON.stringify({ nome, dataInput, local, action }),
+            data: JSON.stringify({ nome, dataInput, local }),
             contentType: 'application/json',
             success: function (data, textStatus, xhr) {
 
@@ -77,12 +75,11 @@ function editarEvento(id) {
         var nome = document.getElementById('inputNomeEditar').value;
         var dataInput = document.getElementById('inputDataEditar').value;
         var local = document.getElementById('inputLocalEditar').value;
-        var action = 'PUT'
 
         $.ajax({
             url: "/crud-jsp/controller/"+id+"",
             type: 'PUT',
-            data: JSON.stringify({nome, dataInput, local, action }),
+            data: JSON.stringify({nome, dataInput, local }),
             success: function (data, textStatus, xhr) {
 
                 Swal.fire({
@@ -119,18 +116,9 @@ function deletarEvento(id) {
 
         if (result.isConfirmed) {
 
-            var jsonId = JSON.parse(id);
-            var action = 'DELETE';
-
-            var data = {
-                jsonId: jsonId,
-                action: action
-            };
-
             $.ajax({
                 url: "/crud-jsp/controller/"+id+"",
                 type: 'DELETE',
-                data: JSON.stringify(data),
                 success: function () {
 
                     Swal.fire('Deletado!', '', 'sucesso')
@@ -150,11 +138,9 @@ function deletarEvento(id) {
 
 function getEventoById(id) {
 
-    var action = 'GetById'
     $.ajax({
-        url: "/crud-jsp/controller",
+        url: "/crud-jsp/controller/"+id+"",
         type: 'GET',
-        data: { id, action },
         success: function (result) {
             evento = JSON.parse(result);
             setarInputs([evento]);

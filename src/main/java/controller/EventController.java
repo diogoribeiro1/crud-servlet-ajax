@@ -22,33 +22,36 @@ public class EventController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        String action = req.getParameter("action");
         try {
-            if (action == null) {
 
+            String contextPath = req.getContextPath();
+            String urlPath = req.getRequestURI().substring(contextPath.length());
+
+            if (urlPath.split("/").length < 3) {
                 List<EventModel> listEvents = eventDao.getAllEvent();
 
                 PrintWriter out = resp.getWriter();
                 resp.setStatus(HttpServletResponse.SC_OK);
                 out.print(new Gson().toJson(listEvents));
                 out.flush();
-
-            } else {
-                switch (action) {
-                    case "GetById":
-
-                        int id = Integer.parseInt(req.getParameter("id"));
-                        EventModel eventModel = eventDao.getEventById(id);
-
-                        PrintWriter out = resp.getWriter();
-                        out.print(new Gson().toJson(eventModel));
-                        out.flush();
-                        break;
-                }
             }
+
+            String idString = urlPath.split("/")[2];
+
+            int id = Integer.parseInt(idString);
+            EventModel eventModel = eventDao.getEventById(id);
+
+            PrintWriter out = resp.getWriter();
+            resp.setStatus(HttpServletResponse.SC_OK);
+            out.print(new Gson().toJson(eventModel));
+            out.flush();
+
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println("IndexOutOfBoundsException: ID not found, So get all events");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+
     }
 
     @Override

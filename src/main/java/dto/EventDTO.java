@@ -14,5 +14,4 @@ public class EventDTO {
     private String nome;
     private String dataInput;
     private String local;
-    private String action;
 }

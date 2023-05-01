@@ -1,16 +1,3 @@
-<style>
-  details {
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    margin: 0.5em 0;
-    padding: 0.5em;
-  }
-
-  details[open] {
-    background-color: #f0f0f0;
-  }
-</style>
-
 # CRUD Servlet Ajax
 
 Este é um projeto de CRUD simples utilizando Java no lado do servidor e a arquitetura REST, sem a utilização de frameworks. Já no lado do cliente, é utilizado Ajax com jQuery para realizar requisições assíncronas à API e atualizar o conteúdo da página sem precisar recarregá-la completamente.

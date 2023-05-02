@@ -11,20 +11,39 @@ public class EventDao {
     Connection conn;
     PreparedStatement pstm;
 
-    public void createEvent(EventModel eventModel) throws Exception {
+    public EventDao() {
+    }
+
+    public EventDao(Connection connection) {
+        this.conn = connection;
+    }
+
+    public EventModel createEvent(EventModel eventModel) throws Exception {
         String comandoSQL = "INSERT INTO eventos_tbl(nome, data, local) values (?, ?, ?)";
         conn = new ConexaoDao().getConnection();
         try {
-            pstm = conn.prepareStatement(comandoSQL);
+            pstm = conn.prepareStatement(comandoSQL, Statement.RETURN_GENERATED_KEYS);
             pstm.setString(1, eventModel.getNome());
             pstm.setString(2, eventModel.getData());
             pstm.setString(3, eventModel.getLocal());
             pstm.execute();
+    
+            // Extrai a chave primária gerada pelo banco de dados
+            ResultSet generatedKeys = pstm.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                int id = generatedKeys.getInt(1);
+    
+                // Utiliza a chave primária para obter o objeto criado
+                EventModel createdEvent = getEventById(id);
+                return createdEvent;
+            } else {
+                throw new SQLException("Falha ao obter a chave primária do evento criado");
+            }
         } catch (SQLException e) {
-            throw new Exception(e);
+            throw new SQLException("Falha ao criar o evento: " + e.getMessage());
         }
-        pstm.close();
     }
+    
 
     public List<EventModel> getAllEvent() throws Exception {
 
@@ -53,7 +72,7 @@ public class EventDao {
         }
     }
 
-    public EventModel getEventById(int idEvent) throws Exception {
+    public EventModel getEventById(Integer idEvent) throws Exception {
 
         String comandoSQL = "SELECT * FROM eventos_tbl WHERE id = ?";
 
@@ -82,7 +101,7 @@ public class EventDao {
         }
     }
 
-    public void deleteEvent(int id) throws Exception {
+    public void deleteEvent(Integer id) throws Exception {
         String comandoSQL = "DELETE FROM eventos_tbl WHERE id = ? ";
 
         conn = new ConexaoDao().getConnection();

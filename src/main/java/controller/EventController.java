@@ -17,10 +17,18 @@ import java.util.List;
 
 public class EventController extends HttpServlet {
 
-    private EventDao eventDao = new EventDao();
+    public EventDao eventDao;
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    public void init() throws ServletException {
+        super.init();
+        this.eventDao = new EventDao();
+    }
+
+    @Override
+    public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        resp.setContentType("application/json");
 
         try {
 
@@ -29,25 +37,22 @@ public class EventController extends HttpServlet {
 
             if (urlPath.split("/").length < 3) {
                 List<EventModel> listEvents = eventDao.getAllEvent();
-
                 PrintWriter out = resp.getWriter();
                 resp.setStatus(HttpServletResponse.SC_OK);
                 out.print(new Gson().toJson(listEvents));
                 out.flush();
+            } else {
+                String idString = urlPath.split("/")[2];
+                int id = Integer.parseInt(idString);
+                EventModel eventModel = eventDao.getEventById(id);
+                System.out.println(eventModel);
+
+                PrintWriter out = resp.getWriter();
+                resp.setStatus(HttpServletResponse.SC_OK);
+                out.print(new Gson().toJson(eventModel));
+                out.flush();
             }
 
-            String idString = urlPath.split("/")[2];
-
-            int id = Integer.parseInt(idString);
-            EventModel eventModel = eventDao.getEventById(id);
-
-            PrintWriter out = resp.getWriter();
-            resp.setStatus(HttpServletResponse.SC_OK);
-            out.print(new Gson().toJson(eventModel));
-            out.flush();
-
-        } catch (IndexOutOfBoundsException e) {
-            System.out.println("IndexOutOfBoundsException: ID not found, So get all events");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -55,25 +60,34 @@ public class EventController extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         ObjectMapper mapper = new ObjectMapper();
         EventDTO eventRequest = mapper.readValue(req.getInputStream(), EventDTO.class);
 
         try {
-
             String nome = eventRequest.getNome();
             String data = eventRequest.getDataInput();
             String local = eventRequest.getLocal();
 
             EventModel eventModel = new EventModel(nome, data, local);
 
-            eventDao.createEvent(eventModel);
+            eventModel = eventDao.createEvent(eventModel);
 
-            resp.setStatus(HttpServletResponse.SC_CREATED);
+            if (!eventModel.equals(null)) {
+
+                PrintWriter out = resp.getWriter();
+                resp.setStatus(HttpServletResponse.SC_CREATED);
+                out.print(new Gson().toJson(eventModel));
+                out.flush();
+
+            } else {
+                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            }
 
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            throw new ServletException(e);
         }
     }
 

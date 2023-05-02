@@ -115,24 +115,45 @@ public class EventDao {
         pstm.close();
     }
 
-    public void updateEvent(EventModel eventModel) throws Exception {
-
+    public EventModel updateEvent(EventModel eventModel) throws Exception {
         String comandoSQL = "UPDATE eventos_tbl SET nome = ?, data = ?, local = ? WHERE id = ?";
-
         conn = new ConexaoDao().getConnection();
-
+    
         try {
             pstm = conn.prepareStatement(comandoSQL);
             pstm.setString(1, eventModel.getNome());
             pstm.setString(2, eventModel.getData());
             pstm.setString(3, eventModel.getLocal());
             pstm.setInt(4, eventModel.getId());
-            pstm.execute();
+            pstm.executeUpdate();
+    
+            // Consulta o objeto atualizado no banco de dados
+            String selectSQL = "SELECT * FROM eventos_tbl WHERE id = ?";
+            PreparedStatement selectPstm = conn.prepareStatement(selectSQL);
+            selectPstm.setInt(1, eventModel.getId());
+            ResultSet rs = selectPstm.executeQuery();
+            if (rs.next()) {
+                // Cria e retorna o objeto atualizado
+                EventModel updatedEventModel = new EventModel(
+                    rs.getInt("id"),
+                    rs.getString("nome"),
+                    rs.getString("data"),
+                    rs.getString("local")
+                );
+                return updatedEventModel;
+            } else {
+                throw new Exception("Evento não encontrado no banco de dados");
+            }
         } catch (SQLException e) {
             throw new Exception(e);
+        } finally {
+            if (pstm != null) {
+                pstm.close();
+            }
+            conn.close();
         }
-        pstm.close();
     }
+    
 
 }
 

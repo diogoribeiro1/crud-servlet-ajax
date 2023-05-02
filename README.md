@@ -1,19 +1,23 @@
 # CRUD Servlet Ajax
 
-Este é um projeto de CRUD simples utilizando Java no lado do servidor e a arquitetura REST, sem a utilização de frameworks. Já no lado do cliente, é utilizado Ajax com jQuery para realizar requisições assíncronas à API e atualizar o conteúdo da página sem precisar recarregá-la completamente.
+Este é um projeto que implementa operações CRUD utilizando Java no lado do servidor e a arquitetura REST. Para isso, é utilizado o Servlet e Junit em conjunto com Mockito para criar testes unitários confiáveis. Por outro lado, do lado do cliente, as requisições assíncronas à API são feitas por meio de Ajax com jQuery, permitindo que o conteúdo da página seja atualizado sem precisar recarregá-la completamente.
 
 ## Tecnologias Utilizadas
 
 - Java 11
-- Ajax
-- jQuery
 - Servlet
-- MySQL
 - Lombok
+- GSON
+- Jackson
+- JUnit
+- Mockito
 - HTML
 - CSS
 - JavaScript
+- Ajax
+- jQuery
 - Bootstrap
+- MySQL
 
 ## Funcionalidades do Sistema
 
@@ -27,7 +31,7 @@ Este é um projeto de CRUD simples utilizando Java no lado do servidor e a arqui
 Execute no terminal
 
 ```shell
-    mvn tomcat6:run -f "pom.xml" 
+    mvn tomcat6:run -f "pom.xml"    
 ```
 
 ## Payload
@@ -145,14 +149,21 @@ Content-Type: application/json
 ```json
     {
         "nome":"Meu Evento",
-        "data":"20/12/2025",
+        "dataInput":"20/12/2025",
         "local":"Local do Evento"
     }    
 ```
 ## Exemplo de Resposta
 
 HTTP/1.1 201 CREATED
-
+```json
+    {
+        "id": 1,
+        "nome":"Meu Evento",
+        "dataInput":"20/12/2025",
+        "local":"Local do Evento"
+    }    
+```
 </details>
 
 <details>
@@ -185,6 +196,15 @@ Content-Type: application/json
 ## Exemplo de Resposta
 
 HTTP/1.1 200 OK
+
+```json
+    {
+        "id": 1,
+        "nome":"Meu Novo Evento",
+        "data":"12/02/2026",
+        "local":"Novo Local do Evento"
+    }    
+```
   
 </details>
 

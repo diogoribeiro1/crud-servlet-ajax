@@ -10,12 +10,27 @@ public class EventDao {
 
     Connection conn;
     PreparedStatement pstm;
+    String sqlFilePath;
 
     public EventDao() {
     }
 
     public EventDao(Connection connection) {
         this.conn = connection;
+    }
+
+    public EventDao(String sqlFile) {
+        try {
+
+            this.sqlFilePath = sqlFile;
+            String query = String.format("RUNSCRIPT FROM '%s'", this.sqlFilePath);
+            conn = new ConexaoDao().getConnection();
+            Statement stmt = conn.createStatement();
+            stmt.executeUpdate(query);
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public EventModel createEvent(EventModel eventModel) throws Exception {
@@ -27,12 +42,12 @@ public class EventDao {
             pstm.setString(2, eventModel.getData());
             pstm.setString(3, eventModel.getLocal());
             pstm.execute();
-    
+
             // Extrai a chave primária gerada pelo banco de dados
             ResultSet generatedKeys = pstm.getGeneratedKeys();
             if (generatedKeys.next()) {
                 int id = generatedKeys.getInt(1);
-    
+
                 // Utiliza a chave primária para obter o objeto criado
                 EventModel createdEvent = getEventById(id);
                 return createdEvent;
@@ -43,7 +58,6 @@ public class EventDao {
             throw new SQLException("Falha ao criar o evento: " + e.getMessage());
         }
     }
-    
 
     public List<EventModel> getAllEvent() throws Exception {
 
@@ -101,7 +115,7 @@ public class EventDao {
         }
     }
 
-    public void deleteEvent(Integer id) throws Exception {
+    public boolean deleteEvent(Integer id) throws Exception {
         String comandoSQL = "DELETE FROM eventos_tbl WHERE id = ? ";
 
         conn = new ConexaoDao().getConnection();
@@ -109,16 +123,16 @@ public class EventDao {
             pstm = conn.prepareStatement(comandoSQL);
             pstm.setInt(1, id);
             pstm.execute();
+            return true;
         } catch (SQLException e) {
             throw new Exception(e);
         }
-        pstm.close();
     }
 
     public EventModel updateEvent(EventModel eventModel) throws Exception {
         String comandoSQL = "UPDATE eventos_tbl SET nome = ?, data = ?, local = ? WHERE id = ?";
         conn = new ConexaoDao().getConnection();
-    
+
         try {
             pstm = conn.prepareStatement(comandoSQL);
             pstm.setString(1, eventModel.getNome());
@@ -126,7 +140,7 @@ public class EventDao {
             pstm.setString(3, eventModel.getLocal());
             pstm.setInt(4, eventModel.getId());
             pstm.executeUpdate();
-    
+
             // Consulta o objeto atualizado no banco de dados
             String selectSQL = "SELECT * FROM eventos_tbl WHERE id = ?";
             PreparedStatement selectPstm = conn.prepareStatement(selectSQL);
@@ -135,11 +149,10 @@ public class EventDao {
             if (rs.next()) {
                 // Cria e retorna o objeto atualizado
                 EventModel updatedEventModel = new EventModel(
-                    rs.getInt("id"),
-                    rs.getString("nome"),
-                    rs.getString("data"),
-                    rs.getString("local")
-                );
+                        rs.getInt("id"),
+                        rs.getString("nome"),
+                        rs.getString("data"),
+                        rs.getString("local"));
                 return updatedEventModel;
             } else {
                 throw new Exception("Evento não encontrado no banco de dados");
@@ -153,7 +166,5 @@ public class EventDao {
             conn.close();
         }
     }
-    
 
 }
-

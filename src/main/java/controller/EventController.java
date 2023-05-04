@@ -6,6 +6,8 @@ import dao.EventDao;
 import dto.EventDTO;
 import model.EventModel;
 
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServlet;
@@ -24,9 +26,11 @@ public class EventController extends HttpServlet {
     public EventDao eventDao;
 
     @Override
-    public void init() throws ServletException {
-        super.init();
-        this.eventDao = new EventDao();
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        ServletContext context = config.getServletContext();
+        String sqlFilePath = context.getRealPath("/WEB-INF/myfile.sql");
+        this.eventDao = new EventDao(sqlFilePath);
     }
 
     /**
@@ -101,16 +105,20 @@ public class EventController extends HttpServlet {
     }
 
     /**
-     * Exclui um  evento com base no ID enviado pelo cliente.
+     * Exclui um evento com base no ID enviado pelo cliente.
      */
     @Override
-    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    public void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
             String urlPath = req.getRequestURI();
             String[] urlParts = urlPath.split("/");
             int id = Integer.parseInt(urlParts[urlParts.length - 1]);
-            eventDao.deleteEvent(id);
-            resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
+            boolean apagado = eventDao.deleteEvent(id);
+            if (apagado) {
+                resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
+            }else{
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            }
         } catch (NumberFormatException e) {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID inválido");
         } catch (Exception e) {

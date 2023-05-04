@@ -9,9 +9,11 @@ import java.util.Arrays;
 import static org.mockito.ArgumentMatchers.any;
 
 import javax.servlet.ReadListener;
+import javax.servlet.ServletException;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.*;
 import org.junit.*;
+import org.mockito.ArgumentCaptor;
 
 import com.google.gson.Gson;
 
@@ -32,7 +34,7 @@ public class ExemploServletTest {
     when(eventDAO.getEventById(any())).thenReturn(payload);
     when(eventDAO.getAllEvent()).thenReturn(Arrays.asList(payload));
     when(eventDAO.createEvent(any())).thenReturn(payload);
-
+    when(eventDAO.deleteEvent(anyInt())).thenReturn(true);
   }
 
   @Test
@@ -136,5 +138,28 @@ public class ExemploServletTest {
     String expectedJson = new Gson().toJson(payload);
     Assert.assertEquals(expectedJson, stringWriter.toString().trim());
   }
+
+  @Test
+public void doDeleteTest() throws IOException, ServletException {
+    HttpServletRequest request = mock(HttpServletRequest.class);
+    HttpServletResponse response = mock(HttpServletResponse.class);
+    EventController servlet = mock(EventController.class);
+
+    when(request.getContextPath()).thenReturn("/crud-jsp");
+    when(request.getRequestURI()).thenReturn("/crud-jsp/event");
+
+    ArgumentCaptor<HttpServletResponse> responseCaptor = ArgumentCaptor.forClass(HttpServletResponse.class);
+
+    doAnswer(invocation -> {
+        HttpServletResponse capturedResponse = responseCaptor.getValue();
+        capturedResponse.setStatus(204);
+        return null;
+    }).when(servlet).doDelete(eq(request), responseCaptor.capture());
+
+    servlet.doDelete(request, response);
+
+    HttpServletResponse capturedResponse = responseCaptor.getValue();
+    verify(capturedResponse, times(1)).setStatus(204);
+}
 
 }

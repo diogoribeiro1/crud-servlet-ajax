@@ -17,6 +17,7 @@ Este é um projeto que implementa operações CRUD utilizando Java no lado do se
 - Ajax
 - jQuery
 - Bootstrap
+- H2 Database
 - MySQL
 
 ## Funcionalidades do Sistema

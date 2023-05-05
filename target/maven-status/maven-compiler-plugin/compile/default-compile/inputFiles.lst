@@ -3,3 +3,4 @@
 /home/diogoribeiro/Documents/crud-servlet-ajax/src/main/java/dao/EventDao.java
 /home/diogoribeiro/Documents/crud-servlet-ajax/src/main/java/model/EventModel.java
 /home/diogoribeiro/Documents/crud-servlet-ajax/src/main/java/dto/EventDTO.java
+/home/diogoribeiro/Documents/crud-servlet-ajax/src/main/java/controller/H2ConsoleServlet.java
